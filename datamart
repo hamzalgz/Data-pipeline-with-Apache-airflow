@@ -1,0 +1,215 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 11.11 (Ubuntu 11.11-1.pgdg18.04+1)
+-- Dumped by pg_dump version 11.11 (Ubuntu 11.11-1.pgdg18.04+1)
+
+-- Started on 2021-06-01 13:01:01 UTC
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 8 (class 2615 OID 16455)
+-- Name: biabsence; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA biabsence;
+
+
+ALTER SCHEMA biabsence OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 197 (class 1259 OID 16456)
+-- Name: Professors; Type: TABLE; Schema: biabsence; Owner: postgres
+--
+
+CREATE TABLE biabsence."Professors" (
+    id_prof integer NOT NULL,
+    name text,
+    email text
+);
+
+
+ALTER TABLE biabsence."Professors" OWNER TO postgres;
+
+--
+-- TOC entry 198 (class 1259 OID 16462)
+-- Name: Professors_id_prof_seq; Type: SEQUENCE; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE biabsence."Professors" ALTER COLUMN id_prof ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME biabsence."Professors_id_prof_seq"
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 199 (class 1259 OID 16464)
+-- Name: Time; Type: TABLE; Schema: biabsence; Owner: postgres
+--
+
+CREATE TABLE biabsence."Time" (
+    id_time integer NOT NULL,
+    hour integer,
+    day integer,
+    month integer,
+    year integer,
+    date date
+);
+
+
+ALTER TABLE biabsence."Time" OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 16467)
+-- Name: Time_id_time_seq; Type: SEQUENCE; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE biabsence."Time" ALTER COLUMN id_time ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME biabsence."Time_id_time_seq"
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 201 (class 1259 OID 16469)
+-- Name: fact_table; Type: TABLE; Schema: biabsence; Owner: postgres
+--
+
+CREATE TABLE biabsence.fact_table (
+    id_time integer NOT NULL,
+    id_prof integer NOT NULL,
+    id_student integer NOT NULL,
+    nb_abs integer,
+    abs_duration double precision,
+    nb_lates integer,
+    nb_pres integer,
+    duration integer
+);
+
+
+ALTER TABLE biabsence.fact_table OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 16472)
+-- Name: students; Type: TABLE; Schema: biabsence; Owner: postgres
+--
+
+CREATE TABLE biabsence.students (
+    id_student integer NOT NULL,
+    name text,
+    gender text,
+    email text,
+    course text,
+    major text
+);
+
+
+ALTER TABLE biabsence.students OWNER TO postgres;
+
+--
+-- TOC entry 203 (class 1259 OID 16478)
+-- Name: students_id_student_seq; Type: SEQUENCE; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE biabsence.students ALTER COLUMN id_student ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME biabsence.students_id_student_seq
+    START WITH 1
+    INCREMENT BY 1
+    MINVALUE 0
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- TOC entry 2785 (class 2606 OID 16481)
+-- Name: Professors Professors_pkey; Type: CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence."Professors"
+    ADD CONSTRAINT "Professors_pkey" PRIMARY KEY (id_prof);
+
+
+--
+-- TOC entry 2787 (class 2606 OID 16483)
+-- Name: Time Time_pkey; Type: CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence."Time"
+    ADD CONSTRAINT "Time_pkey" PRIMARY KEY (id_time);
+
+
+--
+-- TOC entry 2789 (class 2606 OID 16485)
+-- Name: fact_table fact_table_pkey; Type: CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence.fact_table
+    ADD CONSTRAINT fact_table_pkey PRIMARY KEY (id_time, id_prof, id_student);
+
+
+--
+-- TOC entry 2791 (class 2606 OID 16487)
+-- Name: students students_pkey; Type: CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence.students
+    ADD CONSTRAINT students_pkey PRIMARY KEY (id_student);
+
+
+--
+-- TOC entry 2792 (class 2606 OID 16488)
+-- Name: fact_table prof; Type: FK CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence.fact_table
+    ADD CONSTRAINT prof FOREIGN KEY (id_prof) REFERENCES biabsence."Professors"(id_prof) NOT VALID;
+
+
+--
+-- TOC entry 2793 (class 2606 OID 16493)
+-- Name: fact_table student; Type: FK CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence.fact_table
+    ADD CONSTRAINT student FOREIGN KEY (id_student) REFERENCES biabsence.students(id_student) NOT VALID;
+
+
+--
+-- TOC entry 2794 (class 2606 OID 16498)
+-- Name: fact_table time; Type: FK CONSTRAINT; Schema: biabsence; Owner: postgres
+--
+
+ALTER TABLE ONLY biabsence.fact_table
+    ADD CONSTRAINT "time" FOREIGN KEY (id_time) REFERENCES biabsence."Time"(id_time) NOT VALID;
+
+
+-- Completed on 2021-06-01 13:01:09 UTC
+
+--
+-- PostgreSQL database dump complete
+--
+
